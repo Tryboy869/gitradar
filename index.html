@@ -694,11 +694,12 @@
     </div>
   </div>
 
-  <!-- SCRIPT continues in Part 2... -->
-
-// AJOUTER CE SCRIPT À LA FIN DU </body> dans index.html
-
 <script>
+  // ========== CONFIGURATION ==========
+  // IMPORTANT: Change this to your actual backend URL.
+  // Relative paths like '/api/...' fail in some local/preview environments (blob:).
+  const API_BASE_URL = 'http://localhost:3000'; 
+
   // ========== STATE MANAGEMENT ==========
   let currentMode = 'manual';
   let currentUser = null;
@@ -762,7 +763,8 @@
         limit: 50
       });
 
-      const response = await fetch(`/api/repos?${params}`);
+      // CALL BACKEND
+      const response = await fetch(`${API_BASE_URL}/api/repos?${params}`);
       const data = await response.json();
 
       if (data.success) {
@@ -792,7 +794,8 @@
     showLoading();
 
     try {
-      const response = await fetch('/api/recommend', {
+      // CALL BACKEND
+      const response = await fetch(`${API_BASE_URL}/api/recommend`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -909,7 +912,8 @@
     const password = document.getElementById('loginPassword').value;
 
     try {
-      const response = await fetch('/api/auth/login', {
+      // CALL BACKEND
+      const response = await fetch(`${API_BASE_URL}/api/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password })
@@ -942,7 +946,8 @@
     const password = document.getElementById('registerPassword').value;
 
     try {
-      const response = await fetch('/api/auth/register', {
+      // CALL BACKEND
+      const response = await fetch(`${API_BASE_URL}/api/auth/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, email, password })
@@ -969,7 +974,8 @@
 
   async function loadUserProfile() {
     try {
-      const response = await fetch('/api/profile', {
+      // CALL BACKEND
+      const response = await fetch(`${API_BASE_URL}/api/profile`, {
         headers: {
           'Authorization': `Bearer ${authToken}`
         }
@@ -1046,7 +1052,7 @@
   // ========== HEALTH CHECK ==========
   async function checkHealth() {
     try {
-      const response = await fetch('/api/health');
+      const response = await fetch(`${API_BASE_URL}/api/health`);
       const data = await response.json();
       console.log('🏥 Health:', data);
     } catch (error) {
