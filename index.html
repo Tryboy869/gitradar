@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>GitRadar - GitHub Intelligence Layer</title>
+  <title>GitHub Discovery - Trouvez les meilleurs projets open-source</title>
   <style>
     * {
       margin: 0;
@@ -11,1057 +11,382 @@
       box-sizing: border-box;
     }
 
-    :root {
-      --primary: #6366f1;
-      --secondary: #8b5cf6;
-      --dark: #0f172a;
-      --darker: #020617;
-      --light: #f1f5f9;
-      --success: #10b981;
-      --warning: #f59e0b;
-      --error: #ef4444;
-    }
-
     body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      background: linear-gradient(135deg, var(--darker) 0%, var(--dark) 100%);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       color: white;
-      min-height: 100vh;
+      overflow-x: hidden;
     }
 
-    /* HEADER */
-    header {
-      background: rgba(15, 23, 42, 0.8);
-      backdrop-filter: blur(10px);
-      padding: 1rem 2rem;
-      border-bottom: 1px solid rgba(99, 102, 241, 0.2);
-      position: sticky;
-      top: 0;
-      z-index: 100;
-    }
-
-    .header-content {
-      max-width: 1400px;
-      margin: 0 auto;
+    .navbar {
       display: flex;
       justify-content: space-between;
       align-items: center;
+      padding: 20px 50px;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
     }
 
     .logo {
-      font-size: 1.5rem;
+      font-size: 24px;
       font-weight: bold;
-      background: linear-gradient(135deg, var(--primary), var(--secondary));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-
-    .auth-buttons button {
-      padding: 0.5rem 1.5rem;
-      margin-left: 1rem;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      font-size: 0.9rem;
-      transition: all 0.3s;
-    }
-
-    .btn-login {
-      background: transparent;
-      color: white;
-      border: 1px solid var(--primary);
-    }
-
-    .btn-login:hover {
-      background: var(--primary);
-    }
-
-    .btn-register {
-      background: linear-gradient(135deg, var(--primary), var(--secondary));
-      color: white;
-    }
-
-    .btn-register:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 10px 20px rgba(99, 102, 241, 0.3);
-    }
-
-    /* CONTAINER */
-    .container {
-      max-width: 1400px;
-      margin: 0 auto;
-      padding: 2rem;
-    }
-
-    /* HERO SECTION */
-    .hero {
-      text-align: center;
-      padding: 4rem 2rem;
-      margin-bottom: 3rem;
-    }
-
-    .hero h1 {
-      font-size: 3rem;
-      margin-bottom: 1rem;
-      background: linear-gradient(135deg, white, var(--light));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-
-    .hero p {
-      font-size: 1.2rem;
-      color: var(--light);
-      opacity: 0.8;
-      margin-bottom: 2rem;
-    }
-
-    /* MODE SELECTOR */
-    .mode-selector {
-      display: flex;
-      justify-content: center;
-      gap: 2rem;
-      margin-bottom: 3rem;
-    }
-
-    .mode-card {
-      background: rgba(255, 255, 255, 0.05);
-      border: 2px solid rgba(99, 102, 241, 0.3);
-      border-radius: 16px;
-      padding: 2rem;
-      width: 300px;
-      cursor: pointer;
-      transition: all 0.3s;
-    }
-
-    .mode-card:hover {
-      border-color: var(--primary);
-      transform: translateY(-5px);
-      box-shadow: 0 20px 40px rgba(99, 102, 241, 0.2);
-    }
-
-    .mode-card.active {
-      border-color: var(--primary);
-      background: rgba(99, 102, 241, 0.1);
-    }
-
-    .mode-icon {
-      font-size: 3rem;
-      margin-bottom: 1rem;
-    }
-
-    .mode-card h3 {
-      font-size: 1.5rem;
-      margin-bottom: 0.5rem;
-    }
-
-    .mode-card p {
-      color: var(--light);
-      opacity: 0.7;
-    }
-
-    /* SEARCH BAR */
-    .search-section {
-      background: rgba(255, 255, 255, 0.05);
-      border-radius: 16px;
-      padding: 2rem;
-      margin-bottom: 2rem;
-    }
-
-    .search-bar {
-      display: flex;
-      gap: 1rem;
-      margin-bottom: 1rem;
-    }
-
-    .search-bar input {
-      flex: 1;
-      padding: 1rem 1.5rem;
-      border: 2px solid rgba(99, 102, 241, 0.3);
-      border-radius: 12px;
-      background: rgba(255, 255, 255, 0.05);
-      color: white;
-      font-size: 1rem;
-      outline: none;
-      transition: all 0.3s;
-    }
-
-    .search-bar input:focus {
-      border-color: var(--primary);
-      background: rgba(255, 255, 255, 0.08);
-    }
-
-    .search-bar button {
-      padding: 1rem 2rem;
-      background: linear-gradient(135deg, var(--primary), var(--secondary));
-      border: none;
-      border-radius: 12px;
-      color: white;
-      font-size: 1rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.3s;
-    }
-
-    .search-bar button:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 10px 20px rgba(99, 102, 241, 0.3);
-    }
-
-    /* FILTERS */
-    .filters {
-      display: flex;
-      gap: 1rem;
-      flex-wrap: wrap;
-    }
-
-    .filter-group {
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-    }
-
-    .filter-group label {
-      font-size: 0.85rem;
-      color: var(--light);
-      opacity: 0.8;
-    }
-
-    .filter-group select {
-      padding: 0.75rem 1rem;
-      border: 2px solid rgba(99, 102, 241, 0.3);
-      border-radius: 8px;
-      background: rgba(255, 255, 255, 0.05);
-      color: white;
-      cursor: pointer;
-      outline: none;
-    }
-
-    /* RESULTS */
-    .results-section {
-      margin-top: 2rem;
-    }
-
-    .results-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 1.5rem;
-    }
-
-    .results-header h2 {
-      font-size: 1.5rem;
-    }
-
-    .results-count {
-      color: var(--light);
-      opacity: 0.7;
-    }
-
-    .repos-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-      gap: 1.5rem;
-    }
-
-    .repo-card {
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(99, 102, 241, 0.2);
-      border-radius: 12px;
-      padding: 1.5rem;
-      transition: all 0.3s;
-      cursor: pointer;
-    }
-
-    .repo-card:hover {
-      border-color: var(--primary);
-      transform: translateY(-5px);
-      box-shadow: 0 15px 30px rgba(99, 102, 241, 0.2);
-    }
-
-    .repo-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      margin-bottom: 1rem;
-    }
-
-    .repo-name {
-      font-size: 1.1rem;
-      font-weight: 600;
-      color: var(--primary);
-      margin-bottom: 0.25rem;
-    }
-
-    .repo-fullname {
-      font-size: 0.85rem;
-      color: var(--light);
-      opacity: 0.6;
-    }
-
-    .utility-score {
-      background: linear-gradient(135deg, var(--success), #059669);
-      padding: 0.4rem 0.8rem;
-      border-radius: 20px;
-      font-size: 0.85rem;
-      font-weight: 600;
-    }
-
-    .repo-description {
-      color: var(--light);
-      opacity: 0.8;
-      margin-bottom: 1rem;
-      line-height: 1.5;
-    }
-
-    .repo-meta {
-      display: flex;
-      gap: 1rem;
-      font-size: 0.85rem;
-      color: var(--light);
-      opacity: 0.7;
-      margin-bottom: 1rem;
-    }
-
-    .repo-meta span {
       display: flex;
       align-items: center;
-      gap: 0.25rem;
+      gap: 10px;
     }
 
-    .repo-tags {
+    .nav-links {
       display: flex;
-      gap: 0.5rem;
-      flex-wrap: wrap;
+      gap: 30px;
     }
 
-    .tag {
-      background: rgba(99, 102, 241, 0.2);
-      padding: 0.25rem 0.75rem;
-      border-radius: 20px;
-      font-size: 0.75rem;
-      color: var(--primary);
-    }
-
-    /* LOADING */
-    .loading {
-      text-align: center;
-      padding: 3rem;
-      color: var(--light);
-      opacity: 0.7;
-    }
-
-    .spinner {
-      border: 3px solid rgba(99, 102, 241, 0.3);
-      border-top-color: var(--primary);
-      border-radius: 50%;
-      width: 40px;
-      height: 40px;
-      animation: spin 1s linear infinite;
-      margin: 0 auto 1rem;
-    }
-
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
-
-    /* MODAL */
-    .modal {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.8);
-      z-index: 1000;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .modal.show {
-      display: flex;
-    }
-
-    .modal-content {
-      background: var(--dark);
-      border: 1px solid rgba(99, 102, 241, 0.3);
-      border-radius: 16px;
-      padding: 2rem;
-      max-width: 500px;
-      width: 90%;
-    }
-
-    .modal-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 1.5rem;
-    }
-
-    .modal-header h2 {
-      font-size: 1.5rem;
-    }
-
-    .modal-close {
-      background: none;
-      border: none;
+    .nav-links a {
       color: white;
-      font-size: 1.5rem;
-      cursor: pointer;
-      opacity: 0.7;
+      text-decoration: none;
+      font-weight: 500;
       transition: opacity 0.3s;
     }
 
-    .modal-close:hover {
-      opacity: 1;
-    }
-
-    .form-group {
-      margin-bottom: 1.5rem;
-    }
-
-    .form-group label {
-      display: block;
-      margin-bottom: 0.5rem;
-      color: var(--light);
+    .nav-links a:hover {
       opacity: 0.8;
     }
 
-    .form-group input {
-      width: 100%;
-      padding: 1rem;
-      border: 2px solid rgba(99, 102, 241, 0.3);
-      border-radius: 8px;
-      background: rgba(255, 255, 255, 0.05);
-      color: white;
-      font-size: 1rem;
-      outline: none;
-      transition: all 0.3s;
-    }
-
-    .form-group input:focus {
-      border-color: var(--primary);
-    }
-
-    .btn-submit {
-      width: 100%;
-      padding: 1rem;
-      background: linear-gradient(135deg, var(--primary), var(--secondary));
-      border: none;
-      border-radius: 8px;
-      color: white;
-      font-size: 1rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.3s;
-    }
-
-    .btn-submit:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 10px 20px rgba(99, 102, 241, 0.3);
-    }
-
-    .error-message {
-      background: rgba(239, 68, 68, 0.1);
-      border: 1px solid var(--error);
-      color: var(--error);
-      padding: 1rem;
-      border-radius: 8px;
-      margin-bottom: 1rem;
-    }
-
-    .success-message {
-      background: rgba(16, 185, 129, 0.1);
-      border: 1px solid var(--success);
-      color: var(--success);
-      padding: 1rem;
-      border-radius: 8px;
-      margin-bottom: 1rem;
-    }
-
-    /* HIDDEN */
-    .hidden {
-      display: none !important;
-    }
-
-    /* USER PROFILE */
-    .user-profile {
+    .hero {
+      min-height: 90vh;
       display: flex;
-      align-items: center;
-      gap: 1rem;
-    }
-
-    .user-avatar {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, var(--primary), var(--secondary));
-      display: flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
-      font-weight: 600;
+      text-align: center;
+      padding: 0 20px;
     }
 
-    .btn-logout {
-      padding: 0.5rem 1rem;
-      background: rgba(239, 68, 68, 0.1);
-      border: 1px solid var(--error);
-      color: var(--error);
-      border-radius: 8px;
+    .hero h1 {
+      font-size: 64px;
+      margin-bottom: 20px;
+      animation: fadeInUp 1s ease;
+    }
+
+    .hero p {
+      font-size: 24px;
+      margin-bottom: 40px;
+      opacity: 0.9;
+      max-width: 700px;
+      animation: fadeInUp 1s ease 0.2s both;
+    }
+
+    .cta-buttons {
+      display: flex;
+      gap: 20px;
+      animation: fadeInUp 1s ease 0.4s both;
+    }
+
+    .btn {
+      padding: 15px 40px;
+      font-size: 18px;
+      border-radius: 50px;
+      border: none;
       cursor: pointer;
-      transition: all 0.3s;
+      font-weight: 600;
+      transition: transform 0.3s, box-shadow 0.3s;
     }
 
-    .btn-logout:hover {
-      background: var(--error);
+    .btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    .btn-primary {
+      background: white;
+      color: #667eea;
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.2);
       color: white;
+      border: 2px solid white;
+    }
+
+    .features {
+      padding: 100px 50px;
+      background: white;
+      color: #2c3e50;
+    }
+
+    .features h2 {
+      text-align: center;
+      font-size: 48px;
+      margin-bottom: 60px;
+      color: #667eea;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 40px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .feature-card {
+      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      padding: 40px;
+      border-radius: 20px;
+      text-align: center;
+      transition: transform 0.3s;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-10px);
+    }
+
+    .feature-icon {
+      font-size: 64px;
+      margin-bottom: 20px;
+    }
+
+    .feature-card h3 {
+      font-size: 24px;
+      margin-bottom: 15px;
+      color: #667eea;
+    }
+
+    .feature-card p {
+      font-size: 16px;
+      line-height: 1.6;
+      color: #555;
+    }
+
+    .stats {
+      padding: 100px 50px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      text-align: center;
+    }
+
+    .stats h2 {
+      font-size: 48px;
+      margin-bottom: 60px;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 40px;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .stat-card {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 30px;
+      border-radius: 15px;
+      backdrop-filter: blur(10px);
+    }
+
+    .stat-number {
+      font-size: 48px;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    .stat-label {
+      font-size: 18px;
+      opacity: 0.9;
+    }
+
+    .footer {
+      background: #2c3e50;
+      color: white;
+      padding: 40px 50px;
+      text-align: center;
+    }
+
+    .footer-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 30px;
+    }
+
+    .footer-links a {
+      color: white;
+      text-decoration: none;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .hero h1 {
+        font-size: 40px;
+      }
+
+      .hero p {
+        font-size: 18px;
+      }
+
+      .cta-buttons {
+        flex-direction: column;
+        width: 100%;
+      }
+
+      .btn {
+        width: 100%;
+      }
+
+      .navbar {
+        flex-direction: column;
+        gap: 20px;
+      }
+
+      .features h2, .stats h2 {
+        font-size: 36px;
+      }
     }
   </style>
 </head>
 <body>
-  <!-- HEADER -->
-  <header>
-    <div class="header-content">
-      <div class="logo">🌌 GitRadar</div>
-      
-      <!-- Auth Buttons (hidden when logged in) -->
-      <div class="auth-buttons" id="authButtons">
-        <button class="btn-login" onclick="showLoginModal()">Connexion</button>
-        <button class="btn-register" onclick="showRegisterModal()">Inscription</button>
-      </div>
-
-      <!-- User Profile (hidden by default) -->
-      <div class="user-profile hidden" id="userProfile">
-        <div class="user-avatar" id="userAvatar"></div>
-        <span id="username"></span>
-        <button class="btn-logout" onclick="logout()">Déconnexion</button>
-      </div>
+  <nav class="navbar">
+    <div class="logo">
+      <span>🔍</span>
+      <span>GitHub Discovery</span>
     </div>
-  </header>
-
-  <!-- MAIN CONTAINER -->
-  <div class="container">
-    <!-- HERO -->
-    <div class="hero">
-      <h1>Découvre l'Open-Source Intelligemment</h1>
-      <p>L'IA qui comprend GitHub et trouve les projets parfaits pour toi</p>
+    <div class="nav-links">
+      <a href="login.html">Connexion</a>
+      <a href="signup.html">Inscription</a>
     </div>
+  </nav>
 
-    <!-- MODE SELECTOR -->
-    <div class="mode-selector">
-      <div class="mode-card active" onclick="switchMode('manual')">
-        <div class="mode-icon">🔍</div>
-        <h3>Mode Manuel</h3>
-        <p>Explore librement avec des filtres avancés</p>
+  <section class="hero">
+    <h1>Découvrez les meilleurs projets GitHub</h1>
+    <p>L'intelligence artificielle qui comprend l'open-source et guide chaque décision technique des développeurs</p>
+    
+    <div class="cta-buttons">
+      <button class="btn btn-primary" onclick="window.location.href='signup.html'">
+        Commencer gratuitement
+      </button>
+      <button class="btn btn-secondary" onclick="window.location.href='explore.html'">
+        Explorer les projets
+      </button>
+    </div>
+  </section>
+
+  <section class="features">
+    <h2>Pourquoi GitHub Discovery ?</h2>
+    
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">🎯</div>
+        <h3>Découverte Intelligente</h3>
+        <p>Notre IA analyse des milliers de projets pour vous recommander les meilleurs selon vos besoins réels</p>
       </div>
 
-      <div class="mode-card" onclick="switchMode('ai')">
-        <div class="mode-icon">🤖</div>
+      <div class="feature-card">
+        <div class="feature-icon">🔍</div>
+        <h3>Exploration Manuelle</h3>
+        <p>Filtrez par langage, catégorie, score d'utilité et trouvez exactement ce que vous cherchez</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">🤖</div>
         <h3>Assistant IA</h3>
-        <p>Recommandations personnalisées instantanées</p>
+        <p>Décrivez votre projet, l'IA compose le stack technique optimal avec justifications</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">⚖️</div>
+        <h3>Classement Équitable</h3>
+        <p>Pas de biais par stars ou auteur. Seule l'utilité réelle compte</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">📊</div>
+        <h3>Analyse Approfondie</h3>
+        <p>Documentation, maturité, complexité - toutes les métriques importantes</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">🚀</div>
+        <h3>Gagnez du Temps</h3>
+        <p>20 heures de recherche → 5 minutes. Commencez à coder immédiatement</p>
       </div>
     </div>
+  </section>
 
-    <!-- MANUAL MODE (default) -->
-    <div id="manualMode" class="search-section">
-      <div class="search-bar">
-        <input 
-          type="text" 
-          id="searchInput" 
-          placeholder="Rechercher des projets... (ex: authentication, REST API, React components)"
-          onkeypress="if(event.key === 'Enter') searchRepos()"
-        />
-        <button onclick="searchRepos()">🔍 Rechercher</button>
-      </div>
-
-      <div class="filters">
-        <div class="filter-group">
-          <label>Langage</label>
-          <select id="languageFilter" onchange="searchRepos()">
-            <option value="">Tous</option>
-            <option value="Python">Python</option>
-            <option value="JavaScript">JavaScript</option>
-            <option value="TypeScript">TypeScript</option>
-            <option value="Go">Go</option>
-            <option value="Rust">Rust</option>
-          </select>
-        </div>
-
-        <div class="filter-group">
-          <label>Catégorie</label>
-          <select id="categoryFilter" onchange="searchRepos()">
-            <option value="">Toutes</option>
-            <option value="authentication">Authentication</option>
-            <option value="database">Database</option>
-            <option value="api">API</option>
-            <option value="ui-component">UI Components</option>
-            <option value="framework">Frameworks</option>
-            <option value="testing">Testing</option>
-            <option value="devops">DevOps</option>
-            <option value="ai-ml">AI/ML</option>
-          </select>
-        </div>
-
-        <div class="filter-group">
-          <label>Trier par</label>
-          <select id="sortFilter" onchange="searchRepos()">
-            <option value="utility_score">Utilité</option>
-            <option value="stars">Stars</option>
-            <option value="recent">Récent</option>
-          </select>
-        </div>
-      </div>
-    </div>
-
-    <!-- AI MODE (hidden by default) -->
-    <div id="aiMode" class="search-section hidden">
-      <h3 style="margin-bottom: 1rem;">🤖 Dis-moi ce que tu veux construire</h3>
-      <div class="search-bar">
-        <input 
-          type="text" 
-          id="aiInput" 
-          placeholder="ex: Je veux créer un SaaS avec auth et paiements Stripe"
-          onkeypress="if(event.key === 'Enter') getAIRecommendations()"
-        />
-        <button onclick="getAIRecommendations()">🚀 Recommande-moi</button>
-      </div>
-    </div>
-
-    <!-- RESULTS -->
-    <div class="results-section">
-      <div class="results-header">
-        <h2>📦 Résultats</h2>
-        <span class="results-count" id="resultsCount">0 projets</span>
-      </div>
-
-      <!-- Loading -->
-      <div class="loading hidden" id="loading">
-        <div class="spinner"></div>
-        <p>Recherche en cours...</p>
-      </div>
-
-      <!-- Repos Grid -->
-      <div class="repos-grid" id="reposGrid"></div>
-    </div>
-  </div>
-
-  <!-- MODALS -->
-  <!-- Login Modal -->
-  <div class="modal" id="loginModal">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h2>Connexion</h2>
-        <button class="modal-close" onclick="closeModal('loginModal')">×</button>
-      </div>
-      <div id="loginError" class="error-message hidden"></div>
-      <form onsubmit="login(event)">
-        <div class="form-group">
-          <label>Email</label>
-          <input type="email" id="loginEmail" required />
-        </div>
-        <div class="form-group">
-          <label>Mot de passe</label>
-          <input type="password" id="loginPassword" required />
-        </div>
-        <button type="submit" class="btn-submit">Se connecter</button>
-      </form>
-    </div>
-  </div>
-
-  <!-- Register Modal -->
-  <div class="modal" id="registerModal">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h2>Inscription</h2>
-        <button class="modal-close" onclick="closeModal('registerModal')">×</button>
-      </div>
-      <div id="registerError" class="error-message hidden"></div>
-      <form onsubmit="register(event)">
-        <div class="form-group">
-          <label>Nom d'utilisateur</label>
-          <input type="text" id="registerUsername" required />
-        </div>
-        <div class="form-group">
-          <label>Email</label>
-          <input type="email" id="registerEmail" required />
-        </div>
-        <div class="form-group">
-          <label>Mot de passe (min. 8 caractères)</label>
-          <input type="password" id="registerPassword" minlength="8" required />
-        </div>
-        <button type="submit" class="btn-submit">S'inscrire</button>
-      </form>
-    </div>
-  </div>
-
-<script>
-  // ========== CONFIGURATION ==========
-  // IMPORTANT: Change this to your actual backend URL.
-  // Relative paths like '/api/...' fail in some local/preview environments (blob:).
-  const API_BASE_URL = 'http://localhost:3000'; 
-
-  // ========== STATE MANAGEMENT ==========
-  let currentMode = 'manual';
-  let currentUser = null;
-  let authToken = null;
-
-  // ========== INITIALIZATION ==========
-  window.addEventListener('DOMContentLoaded', () => {
-    console.log('🌌 GitRadar initialized');
+  <section class="stats">
+    <h2>En chiffres</h2>
     
-    // Vérifier si user est connecté
-    const token = localStorage.getItem('gitradar_token');
-    if (token) {
-      authToken = token;
-      loadUserProfile();
-    }
+    <div class="stats-grid" id="statsGrid">
+      <div class="stat-card">
+        <div class="stat-number" id="totalProjects">0</div>
+        <div class="stat-label">Projets analysés</div>
+      </div>
 
-    // Charger repos par défaut
-    searchRepos();
-  });
+      <div class="stat-card">
+        <div class="stat-number">5</div>
+        <div class="stat-label">Langages couverts</div>
+      </div>
 
-  // ========== MODE SWITCHING ==========
-  function switchMode(mode) {
-    currentMode = mode;
+      <div class="stat-card">
+        <div class="stat-number">95%</div>
+        <div class="stat-label">Temps gagné</div>
+      </div>
 
-    // Update UI
-    document.querySelectorAll('.mode-card').forEach(card => {
-      card.classList.remove('active');
-    });
-    event.target.closest('.mode-card').classList.add('active');
+      <div class="stat-card">
+        <div class="stat-number">∞</div>
+        <div class="stat-label">Possibilités</div>
+      </div>
+    </div>
+  </section>
 
-    // Show/hide sections
-    if (mode === 'manual') {
-      document.getElementById('manualMode').classList.remove('hidden');
-      document.getElementById('aiMode').classList.add('hidden');
-      searchRepos();
-    } else {
-      document.getElementById('manualMode').classList.add('hidden');
-      document.getElementById('aiMode').classList.remove('hidden');
-      document.getElementById('reposGrid').innerHTML = '';
-      document.getElementById('resultsCount').textContent = '0 projets';
-    }
-  }
-
-  // ========== SEARCH REPOS ==========
-  async function searchRepos() {
-    console.log('🔍 Searching repos...');
-    
-    const searchInput = document.getElementById('searchInput').value;
-    const language = document.getElementById('languageFilter').value;
-    const category = document.getElementById('categoryFilter').value;
-    const sortBy = document.getElementById('sortFilter').value;
-
-    showLoading();
-
-    try {
-      const params = new URLSearchParams({
-        search: searchInput,
-        language,
-        category,
-        sortBy,
-        limit: 50
-      });
-
-      // CALL BACKEND
-      const response = await fetch(`${API_BASE_URL}/api/repos?${params}`);
-      const data = await response.json();
-
-      if (data.success) {
-        displayRepos(data.repos);
-      } else {
-        showError('Erreur lors de la recherche');
-      }
-    } catch (error) {
-      console.error('Search error:', error);
-      showError('Erreur de connexion');
-    } finally {
-      hideLoading();
-    }
-  }
-
-  // ========== AI RECOMMENDATIONS ==========
-  async function getAIRecommendations() {
-    console.log('🤖 Getting AI recommendations...');
-
-    const aiInput = document.getElementById('aiInput').value;
-
-    if (!aiInput.trim()) {
-      alert('Décris ce que tu veux construire');
-      return;
-    }
-
-    showLoading();
-
-    try {
-      // CALL BACKEND
-      const response = await fetch(`${API_BASE_URL}/api/recommend`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': authToken ? `Bearer ${authToken}` : ''
-        },
-        body: JSON.stringify({
-          projectType: 'custom',
-          features: extractFeatures(aiInput),
-          description: aiInput
-        })
-      });
-
-      const data = await response.json();
-
-      if (data.success) {
-        displayRepos(data.recommendations);
-      } else {
-        showError('Erreur lors de la recommandation');
-      }
-    } catch (error) {
-      console.error('AI error:', error);
-      showError('Erreur de connexion');
-    } finally {
-      hideLoading();
-    }
-  }
-
-  function extractFeatures(text) {
-    const features = [];
-    const keywords = {
-      'auth': 'authentication',
-      'login': 'authentication',
-      'database': 'database',
-      'api': 'api',
-      'payment': 'payment',
-      'stripe': 'payment',
-      'ui': 'ui-component',
-      'component': 'ui-component'
-    };
-
-    text = text.toLowerCase();
-    for (const [keyword, feature] of Object.entries(keywords)) {
-      if (text.includes(keyword) && !features.includes(feature)) {
-        features.push(feature);
-      }
-    }
-
-    return features.length > 0 ? features : ['general'];
-  }
-
-  // ========== DISPLAY REPOS ==========
-  function displayRepos(repos) {
-    const grid = document.getElementById('reposGrid');
-    const count = document.getElementById('resultsCount');
-
-    if (!repos || repos.length === 0) {
-      grid.innerHTML = '<p style="text-align: center; opacity: 0.7; padding: 3rem;">Aucun projet trouvé</p>';
-      count.textContent = '0 projets';
-      return;
-    }
-
-    count.textContent = `${repos.length} projet${repos.length > 1 ? 's' : ''}`;
-
-    grid.innerHTML = repos.map(repo => {
-      const analysis = repo.ai_analysis;
+  <footer class="footer">
+    <div class="footer-content">
+      <div>
+        <p>&copy; 2025 Nexus Studio - GitHub Discovery Platform</p>
+        <p style="margin-top: 10px; opacity: 0.8;">CEO: Abdoul Anzize DAOUDA</p>
+      </div>
       
-      return `
-        <div class="repo-card" onclick="window.open('https://github.com/${repo.full_name}', '_blank')">
-          <div class="repo-header">
-            <div>
-              <div class="repo-name">${repo.name}</div>
-              <div class="repo-fullname">${repo.full_name}</div>
-            </div>
-            <div class="utility-score">⭐ ${analysis.utility_score}</div>
-          </div>
+      <div class="footer-links">
+        <a href="mailto:nexusstudio100@gmail.com">Contact</a>
+        <a href="https://github.com/Tryboy869" target="_blank">GitHub</a>
+      </div>
+    </div>
+  </footer>
 
-          <div class="repo-description">
-            ${repo.description || 'No description available'}
-          </div>
-
-          <div class="repo-meta">
-            <span>⭐ ${formatNumber(repo.stars)}</span>
-            <span>🔱 ${formatNumber(repo.forks)}</span>
-            <span>💻 ${repo.language}</span>
-          </div>
-
-          <div class="repo-tags">
-            <span class="tag">${analysis.category}</span>
-            <span class="tag">${analysis.complexity}</span>
-            ${analysis.production_ready ? '<span class="tag">Production Ready</span>' : ''}
-          </div>
-        </div>
-      `;
-    }).join('');
-  }
-
-  // ========== AUTH FUNCTIONS ==========
-  function showLoginModal() {
-    document.getElementById('loginModal').classList.add('show');
-  }
-
-  function showRegisterModal() {
-    document.getElementById('registerModal').classList.add('show');
-  }
-
-  function closeModal(modalId) {
-    document.getElementById(modalId).classList.remove('show');
-  }
-
-  async function login(event) {
-    event.preventDefault();
-
-    const email = document.getElementById('loginEmail').value;
-    const password = document.getElementById('loginPassword').value;
-
-    try {
-      // CALL BACKEND
-      const response = await fetch(`${API_BASE_URL}/api/auth/login`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password })
-      });
-
-      const data = await response.json();
-
-      if (data.success) {
-        authToken = data.token;
-        localStorage.setItem('gitradar_token', authToken);
-        currentUser = data.user;
+  <script>
+    // Charger stats réelles
+    async function loadStats() {
+      try {
+        const response = await fetch('/api/stats');
+        const data = await response.json();
         
-        updateUIForLoggedInUser();
-        closeModal('loginModal');
-        
-        showSuccess('Connexion réussie !');
-      } else {
-        showErrorInModal('loginError', data.message);
-      }
-    } catch (error) {
-      showErrorInModal('loginError', 'Erreur de connexion');
-    }
-  }
-
-  async function register(event) {
-    event.preventDefault();
-
-    const username = document.getElementById('registerUsername').value;
-    const email = document.getElementById('registerEmail').value;
-    const password = document.getElementById('registerPassword').value;
-
-    try {
-      // CALL BACKEND
-      const response = await fetch(`${API_BASE_URL}/api/auth/register`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, email, password })
-      });
-
-      const data = await response.json();
-
-      if (data.success) {
-        authToken = data.token;
-        localStorage.setItem('gitradar_token', authToken);
-        currentUser = data.user;
-        
-        updateUIForLoggedInUser();
-        closeModal('registerModal');
-        
-        showSuccess('Inscription réussie !');
-      } else {
-        showErrorInModal('registerError', data.message);
-      }
-    } catch (error) {
-      showErrorInModal('registerError', 'Erreur d\'inscription');
-    }
-  }
-
-  async function loadUserProfile() {
-    try {
-      // CALL BACKEND
-      const response = await fetch(`${API_BASE_URL}/api/profile`, {
-        headers: {
-          'Authorization': `Bearer ${authToken}`
+        if (data.success) {
+          document.getElementById('totalProjects').textContent = 
+            data.stats.total_projects.toLocaleString();
         }
-      });
-
-      const data = await response.json();
-
-      if (data.success) {
-        currentUser = data.user;
-        updateUIForLoggedInUser();
-      } else {
-        logout();
+      } catch (error) {
+        console.log('Stats will load when backend is ready');
       }
-    } catch (error) {
-      logout();
     }
-  }
 
-  function logout() {
-    authToken = null;
-    currentUser = null;
-    localStorage.removeItem('gitradar_token');
-    
-    document.getElementById('authButtons').classList.remove('hidden');
-    document.getElementById('userProfile').classList.add('hidden');
-  }
-
-  function updateUIForLoggedInUser() {
-    document.getElementById('authButtons').classList.add('hidden');
-    document.getElementById('userProfile').classList.remove('hidden');
-    
-    const avatar = document.getElementById('userAvatar');
-    const username = document.getElementById('username');
-    
-    avatar.textContent = currentUser.username.charAt(0).toUpperCase();
-    username.textContent = currentUser.username;
-  }
-
-  // ========== UI HELPERS ==========
-  function showLoading() {
-    document.getElementById('loading').classList.remove('hidden');
-    document.getElementById('reposGrid').innerHTML = '';
-  }
-
-  function hideLoading() {
-    document.getElementById('loading').classList.add('hidden');
-  }
-
-  function showError(message) {
-    alert('❌ ' + message);
-  }
-
-  function showSuccess(message) {
-    alert('✅ ' + message);
-  }
-
-  function showErrorInModal(elementId, message) {
-    const errorEl = document.getElementById(elementId);
-    errorEl.textContent = message;
-    errorEl.classList.remove('hidden');
-    
-    setTimeout(() => {
-      errorEl.classList.add('hidden');
-    }, 5000);
-  }
-
-  function formatNumber(num) {
-    if (num >= 1000) {
-      return (num / 1000).toFixed(1) + 'k';
-    }
-    return num.toString();
-  }
-
-  // ========== HEALTH CHECK ==========
-  async function checkHealth() {
-    try {
-      const response = await fetch(`${API_BASE_URL}/api/health`);
-      const data = await response.json();
-      console.log('🏥 Health:', data);
-    } catch (error) {
-      console.error('Health check failed:', error);
-    }
-  }
-
-  // Test health on load
-  checkHealth();
-</script>
+    loadStats();
+  </script>
 </body>
 </html>
