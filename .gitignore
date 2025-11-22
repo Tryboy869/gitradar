@@ -1,35 +1,5 @@
-# GitRadar - Fichiers à ne JAMAIS commit
-
-# ========== SECRETS ==========
+node_modules/
 .env
 .env.local
-.env.production
-
-# ========== NODE ==========
-node_modules/
-npm-debug.log
-yarn-error.log
-package-lock.json
-yarn.lock
-
-# ========== OS ==========
 .DS_Store
-Thumbs.db
-
-# ========== IDE ==========
-.vscode/
-.idea/
-*.swp
-*.swo
-
-# ========== LOGS ==========
 *.log
-logs/
-
-# ========== BUILD ==========
-dist/
-build/
-
-# ========== TEST ==========
-coverage/
-.nyc_output/
