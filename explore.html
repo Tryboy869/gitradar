@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Explorer - GitHub Discovery</title>
+  <link rel="stylesheet" href="assets/styles.css">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="nav-left">
+      <div class="logo" onclick="window.location.href='index.html'">
+        🔍 GitHub Discovery
+      </div>
+    </div>
+    
+    <div class="nav-center">
+      <a href="explore.html" class="nav-link active">🔍 Explorer</a>
+      <a href="assistant.html" class="nav-link">🤖 Assistant IA</a>
+    </div>
+    
+    <div class="nav-right">
+      <span id="userName">Chargement...</span>
+      <button onclick="window.location.href='profile.html'" class="btn-profile">👤</button>
+      <button onclick="logout()" class="btn-logout">Déconnexion</button>
+    </div>
+  </nav>
+
+  <div class="container">
+    <div class="header">
+      <h1>🔍 Explorer les projets</h1>
+      <p>Découvrez les meilleurs projets GitHub par catégorie</p>
+    </div>
+
+    <div class="filters">
+      <div class="filter-group">
+        <label>🔤 Langage</label>
+        <select id="languageFilter" onchange="applyFilters()">
+          <option value="">Tous les langages</option>
+          <option value="JavaScript">JavaScript</option>
+          <option value="Python">Python</option>
+          <option value="Java">Java</option>
+          <option value="TypeScript">TypeScript</option>
+          <option value="Go">Go</option>
+        </select>
+      </div>
+
+      <div class="filter-group">
+        <label>📁 Catégorie</label>
+        <select id="categoryFilter" onchange="applyFilters()">
+          <option value="">Toutes catégories</option>
+          <option value="authentication">Authentification</option>
+          <option value="api">API</option>
+          <option value="database">Base de données</option>
+          <option value="ui">Interface utilisateur</option>
+          <option value="framework">Framework</option>
+          <option value="cli">CLI</option>
+          <option value="testing">Testing</option>
+        </select>
+      </div>
+
+      <div class="filter-group search-group">
+        <label>🔍 Recherche</label>
+        <input type="text" id="searchInput" placeholder="Rechercher un projet..." onkeyup="applyFilters()">
+      </div>
+
+      <button onclick="resetFilters()" class="btn-reset">🔄 Réinitialiser</button>
+    </div>
+
+    <div class="stats-bar" id="statsBar">
+      <span>📊 <strong id="projectCount">0</strong> projets trouvés</span>
+    </div>
+
+    <div class="projects-grid" id="projectsGrid">
+      <div class="loading">Chargement des projets...</div>
+    </div>
+  </div>
+
+  <script src="assets/auth.js"></script>
+  <script>
+    let allProjects = [];
+
+    async function loadProjects() {
+      try {
+        const response = await fetch('/api/projects?limit=100');
+        const data = await response.json();
+
+        if (data.success) {
+          allProjects = data.projects;
+          displayProjects(allProjects);
+        } else {
+          document.getElementById('projectsGrid').innerHTML = 
+            '<div class="error">Erreur de chargement des projets</div>';
+        }
+      } catch (error) {
+        console.error('Error loading projects:', error);
+        document.getElementById('projectsGrid').innerHTML = 
+          '<div class="error">Erreur de connexion</div>';
+      }
+    }
+
+    function displayProjects(projects) {
+      const grid = document.getElementById('projectsGrid');
+      document.getElementById('projectCount').textContent = projects.length;
+
+      if (projects.length === 0) {
+        grid.innerHTML = '<div class="no-results">Aucun projet trouvé</div>';
+        return;
+      }
+
+      const html = projects.map(project => `
+        <div class="project-card" onclick="viewProject(${project.id})">
+          <div class="project-header">
+            <h3>${project.name}</h3>
+            <span class="language-badge">${project.language || 'N/A'}</span>
+          </div>
+          
+          <p class="project-description">${project.description || 'Pas de description'}</p>
+          
+          <div class="project-meta">
+            <span>⭐ ${project.stars}</span>
+            <span class="utility-score">💎 ${project.utility_score ? project.utility_score.toFixed(1) : 'N/A'}/10</span>
+          </div>
+          
+          ${project.category ? `<div class="category-badge">${getCategoryLabel(project.category)}</div>` : ''}
+          
+          <div class="project-topics">
+            ${(project.topics || []).slice(0, 3).map(topic => 
+              `<span class="topic">${topic}</span>`
+            ).join('')}
+          </div>
+        </div>
+      `).join('');
+
+      grid.innerHTML = html;
+    }
+
+    function applyFilters() {
+      const language = document.getElementById('languageFilter').value;
+      const category = document.getElementById('categoryFilter').value;
+      const search = document.getElementById('searchInput').value.toLowerCase();
+
+      let filtered = allProjects;
+
+      if (language) {
+        filtered = filtered.filter(p => p.language === language);
+      }
+
+      if (category) {
+        filtered = filtered.filter(p => p.category === category);
+      }
+
+      if (search) {
+        filtered = filtered.filter(p => 
+          (p.name && p.name.toLowerCase().includes(search)) ||
+          (p.description && p.description.toLowerCase().includes(search)) ||
+          (p.full_name && p.full_name.toLowerCase().includes(search))
+        );
+      }
+
+      displayProjects(filtered);
+    }
+
+    function resetFilters() {
+      document.getElementById('languageFilter').value = '';
+      document.getElementById('categoryFilter').value = '';
+      document.getElementById('searchInput').value = '';
+      displayProjects(allProjects);
+    }
+
+    function viewProject(id) {
+      window.location.href = `project.html?id=${id}`;
+    }
+
+    function getCategoryLabel(category) {
+      const labels = {
+        'authentication': '🔐 Auth',
+        'api': '🔌 API',
+        'database': '🗄️ Database',
+        'ui': '🎨 UI',
+        'framework': '🏗️ Framework',
+        'cli': '⌨️ CLI',
+        'testing': '🧪 Testing'
+      };
+      return labels[category] || category;
+    }
+
+    function logout() {
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      window.location.href = 'login.html';
+    }
+
+    // Check auth et charger données
+    checkAuth();
+    loadUserInfo();
+    loadProjects();
+  </script>
+</body>
+</html>
