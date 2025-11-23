@@ -4,6 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>GitHub Discovery - Trouvez les meilleurs projets open-source</title>
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
   <style>
     * {
       margin: 0;
@@ -265,7 +268,7 @@
 <body>
   <nav class="navbar">
     <div class="logo">
-      <span>🔍</span>
+      <i data-lucide="search" style="width: 24px; height: 24px;"></i>
       <span>GitHub Discovery</span>
     </div>
     <div class="nav-links">
@@ -293,37 +296,49 @@
     
     <div class="features-grid">
       <div class="feature-card">
-        <div class="feature-icon">🎯</div>
+        <div class="feature-icon">
+          <i data-lucide="target" style="width: 64px; height: 64px;"></i>
+        </div>
         <h3>Découverte Intelligente</h3>
         <p>Notre IA analyse des milliers de projets pour vous recommander les meilleurs selon vos besoins réels</p>
       </div>
 
       <div class="feature-card">
-        <div class="feature-icon">🔍</div>
+        <div class="feature-icon">
+          <i data-lucide="search" style="width: 64px; height: 64px;"></i>
+        </div>
         <h3>Exploration Manuelle</h3>
         <p>Filtrez par langage, catégorie, score d'utilité et trouvez exactement ce que vous cherchez</p>
       </div>
 
       <div class="feature-card">
-        <div class="feature-icon">🤖</div>
+        <div class="feature-icon">
+          <i data-lucide="bot" style="width: 64px; height: 64px;"></i>
+        </div>
         <h3>Assistant IA</h3>
         <p>Décrivez votre projet, l'IA compose le stack technique optimal avec justifications</p>
       </div>
 
       <div class="feature-card">
-        <div class="feature-icon">⚖️</div>
+        <div class="feature-icon">
+          <i data-lucide="scale" style="width: 64px; height: 64px;"></i>
+        </div>
         <h3>Classement Équitable</h3>
         <p>Pas de biais par stars ou auteur. Seule l'utilité réelle compte</p>
       </div>
 
       <div class="feature-card">
-        <div class="feature-icon">📊</div>
+        <div class="feature-icon">
+          <i data-lucide="bar-chart-3" style="width: 64px; height: 64px;"></i>
+        </div>
         <h3>Analyse Approfondie</h3>
         <p>Documentation, maturité, complexité - toutes les métriques importantes</p>
       </div>
 
       <div class="feature-card">
-        <div class="feature-icon">🚀</div>
+        <div class="feature-icon">
+          <i data-lucide="rocket" style="width: 64px; height: 64px;"></i>
+        </div>
         <h3>Gagnez du Temps</h3>
         <p>20 heures de recherche → 5 minutes. Commencez à coder immédiatement</p>
       </div>
@@ -371,6 +386,9 @@
   </footer>
 
   <script>
+    // Initialize Lucide icons
+    lucide.createIcons();
+    
     // Charger stats réelles
     async function loadStats() {
       try {
